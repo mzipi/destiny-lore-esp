@@ -1,6 +1,6 @@
 let items = [];
 let currentPage = 0;
-let itemsPerPage = 8;
+let itemsPerPage = 0;
 let language = 'es-mx';
 
 function updateItemsPerPage() {
@@ -13,8 +13,10 @@ function updateItemsPerPage() {
     }
 }
 
-window.addEventListener('resize', updateItemsPerPage); // Actualizar al cambiar el tamaño de la ventana
-updateItemsPerPage(); // Llamar a la función al cargar la página
+window.addEventListener('resize', () => {
+    updateItemsPerPage(); // Actualiza items por página
+    displayItems(); // Muestra los items nuevamente
+});
 
 async function fetchManifestUrls(language) {
     try {

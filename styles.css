@@ -31,6 +31,10 @@ body {
     .container {
         grid-template-columns: repeat(1, 1fr);
     }
+    .modal-content {
+        max-width: 90%; /* Establece un ancho máximo del 90% en pantallas pequeñas */
+        margin: 0 5%; /* Márgenes reducidos en pantallas pequeñas */
+    }
 }
 
 .card {
@@ -108,13 +112,6 @@ body {
     border: 1px solid #444;
     position: relative; /* Para el posicionamiento del botón */
     margin: 0 20px; /* Agregar márgenes a los lados */
-}
-
-@media (max-width: 768px) {
-    .modal-content {
-        max-width: 90%; /* Establece un ancho máximo del 90% en pantallas pequeñas */
-        margin: 0 5%; /* Márgenes reducidos en pantallas pequeñas */
-    }
 }
 
 .modal-content > * {
