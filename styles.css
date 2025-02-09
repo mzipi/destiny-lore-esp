@@ -62,7 +62,6 @@ button:disabled {
     display: flex;
     flex: 0 0 calc(25% - 2vw);
     flex-direction: column;
-    margin: 1vw;
     max-width: 250px;
     height: 320px;
     overflow: hidden;
@@ -204,7 +203,6 @@ button:disabled {
 #content {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columnas por defecto */
-    gap: 1vw; /* Espacio entre las tarjetas */
     padding: 2vw;
 }
 
