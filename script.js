@@ -1,12 +1,31 @@
 let items = [];
 let currentPage = 0;
 const itemsPerPage = 8;
+let language = 'es-mx'; // Idioma por defecto
 
-async function loadLore() {
+async function fetchManifestUrls(language) {
+    try {
+        const response = await fetch("https://www.bungie.net/Platform/Destiny2/Manifest/");
+        const manifestData = await response.json();
+
+        // Construir las URLs correctamente
+        const recordUrl = `https://www.bungie.net${manifestData.Response.jsonWorldComponentContentPaths[language].DestinyRecordDefinition}`;
+        const loreUrl = `https://www.bungie.net${manifestData.Response.jsonWorldComponentContentPaths[language].DestinyLoreDefinition}`;
+
+        console.log("DestinyRecordDefinition URL:", recordUrl);
+        console.log("DestinyLoreDefinition URL:", loreUrl);
+
+        return { recordUrl, loreUrl };
+    } catch (error) {
+        console.error("Error fetching manifest URLs:", error);
+    }
+}
+
+async function loadLore(recordUrl, loreUrl) {
     try {
         const [loreData, recordsData] = await Promise.all([
-            fetch("https://www.bungie.net/common/destiny2_content/json/es-mx/DestinyLoreDefinition-b236dc4b-cff6-4539-9e09-1525582fbe82.json").then(res => res.json()),
-            fetch("https://www.bungie.net/common/destiny2_content/json/es-mx/DestinyRecordDefinition-b236dc4b-cff6-4539-9e09-1525582fbe82.json").then(res => res.json())
+            fetch(loreUrl).then(res => res.json()),
+            fetch(recordUrl).then(res => res.json())
         ]);
 
         if (!loreData || typeof loreData !== "object") {
@@ -35,11 +54,8 @@ async function loadLore() {
                 };
             });
 
-        // Ordenar por índice
         items.sort((a, b) => a.index - b.index);
-
         displayItems();
-
     } catch (error) {
         document.getElementById("content").innerText = "Error al cargar los datos.";
         console.error("Error:", error);
@@ -47,47 +63,57 @@ async function loadLore() {
 }
 
 function displayItems() {
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentItems = items.slice(startIndex, endIndex);
-
     const contentDiv = document.getElementById("content");
-    contentDiv.innerHTML = "";
 
-    const fragment = document.createDocumentFragment();
-    currentItems.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.onclick = () => openModal(items.indexOf(item));
+    // Añadir la clase slide-out
+    contentDiv.classList.add("slide-out");
 
-        if (item.icon) {
-            const imgContainer = document.createElement("div");
-            imgContainer.className = "image-container";
+    // Esperar a que termine la animación de salida
+    setTimeout(() => {
+        const startIndex = currentPage * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentItems = items.slice(startIndex, endIndex);
 
-            const img = document.createElement("img");
-            img.src = item.icon;
-            img.alt = item.name;
+        contentDiv.innerHTML = ""; // Limpiar el contenido
 
-            imgContainer.appendChild(img);
-            card.appendChild(imgContainer);
-        }
+        const fragment = document.createDocumentFragment();
+        currentItems.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.onclick = () => openModal(items.indexOf(item));
 
-        const cardContent = document.createElement("div");
-        cardContent.className = "card-content";
+            if (item.icon) {
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "image-container";
 
-        const title = document.createElement("h2");
-        title.textContent = item.name;
+                const img = document.createElement("img");
+                img.src = item.icon;
+                img.alt = item.name;
 
-        cardContent.appendChild(title);
-        card.appendChild(cardContent);
-        fragment.appendChild(card);
-    });
+                imgContainer.appendChild(img);
+                card.appendChild(imgContainer);
+            }
 
-    contentDiv.appendChild(fragment);
+            const cardContent = document.createElement("div");
+            cardContent.className = "card-content";
 
-    document.getElementById("prevButton").disabled = currentPage === 0;
-    document.getElementById("nextButton").disabled = endIndex >= items.length;
+            const title = document.createElement("h2");
+            title.textContent = item.name;
+
+            cardContent.appendChild(title);
+            card.appendChild(cardContent);
+            fragment.appendChild(card);
+        });
+
+        contentDiv.appendChild(fragment);
+
+        // Añadir la clase slide-in
+        contentDiv.classList.remove("slide-out");
+        contentDiv.classList.add("slide-in");
+
+    }, 500); // Tiempo de espera igual a la duración de la animación
 }
+
 
 function navigate(direction) {
     if (direction === 'prev' && currentPage > 0) {
@@ -138,4 +164,18 @@ window.onclick = function(event) {
     }
 };
 
-loadLore();
+async function init() {
+    const { recordUrl, loreUrl } = await fetchManifestUrls(language);
+    await loadLore(recordUrl, loreUrl);
+}
+
+// Función para cambiar el idioma
+function changeLanguage() {
+    language = language === 'es-mx' ? 'es' : 'es-mx'; // Alterna entre 'es-mx' y 'es'
+    document.getElementById("languageButton").innerText = `${language === 'es-mx' ? 'ES' : 'MX'}`; // Actualiza el texto del botón
+    init(); // Vuelve a cargar los datos con el nuevo idioma
+}
+
+document.getElementById("languageButton").onclick = changeLanguage;
+
+init();

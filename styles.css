@@ -21,6 +21,18 @@ body {
     padding: 20px;
 }
 
+@media (max-width: 1080px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
 .card {
     background-color: #1e1e1e;
     border: 1px solid #333;
@@ -88,31 +100,35 @@ body {
     padding: 20px;
     border-radius: 8px;
     max-width: 450px;
-    max-height: 80vh; /* Limita la altura del modal */
-    overflow-y: auto; /* Agrega barra de desplazamiento si es necesario */
+    max-height: 80vh;
+    overflow-y: auto;
     text-align: center;
     transform: scale(0.8);
     transition: transform 0.3s ease;
     border: 1px solid #444;
+    position: relative;
 }
 
-/* Estilos para la barra de desplazamiento */
+.modal-content > * {
+    margin: 10px 0;
+}
+
 .modal-content::-webkit-scrollbar {
-    width: 8px; /* Ancho de la barra de desplazamiento */
+    width: 8px;
 }
 
 .modal-content::-webkit-scrollbar-track {
-    background: #333; /* Color de fondo del track */
-    border-radius: 5px; /* Bordes redondeados */
+    background: #333;
+    border-radius: 5px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-    background: #555; /* Color del thumb (parte que se arrastra) */
-    border-radius: 5px; /* Bordes redondeados */
+    background: #555;
+    border-radius: 5px;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-    background: #777; /* Color del thumb al pasar el mouse */
+    background: #777;
 }
 
 .modal.show .modal-content {
@@ -125,16 +141,17 @@ body {
 }
 
 .close-button {
-    position: absolute; /* Posiciona el botón en relación al contenedor del modal */
-    top: 10px; /* Espacio desde la parte superior */
-    right: 10px; /* Espacio desde la derecha */
-    font-size: 24px; /* Tamaño del botón */
-    color: #e0e0e0; /* Color del texto */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #e0e0e0;
+    cursor: pointer;
+    z-index: 1;
 }
 
 .close-button:hover {
-    color: #ff4444; /* Color al pasar el mouse */
+    color: #ff4444;
 }
 
 button {
@@ -156,4 +173,58 @@ button:disabled {
     background-color: #555;
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+#languageContainer {
+    position: fixed; /* Fija el contenedor en la pantalla */
+    top: 10px; /* Espacio desde la parte superior */
+    right: 10px; /* Espacio desde la derecha */
+    display: flex; /* Usa flexbox para alinear elementos */
+    align-items: center; /* Centra verticalmente los elementos */
+    gap: 5px; /* Espacio entre el texto y el botón */
+}
+
+#languageButton {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #444; /* Fondo más suave */
+    color: #e0e0e0; /* Color del texto */
+    transition: background-color 0.3s;
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+#languageButton:hover {
+    background-color: #666; /* Cambio de color al pasar el mouse */
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease forwards;
+}
+
+.slide-out {
+    animation: slideOut 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
 }
