@@ -6,65 +6,117 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+    min-height: 100vh;
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
 .container {
     display: grid;
-    grid-template-columns: repeat(5, 200px);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
     justify-content: center;
     align-items: stretch;
+    max-width: 1080px;
+    padding: 20px;
 }
 
 .card {
-    border: 1px solid #ccc;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    height: 250px;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
     overflow: hidden;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card img {
-    max-width: 80%;
-    height: auto;
-    margin-bottom: 10px;
+    transition: transform 0.2s;
+    max-width: 250px;
 }
 
 .card:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-color: #007bff;
+}
+
+.card-content h2 {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.image-container img {
+    width: 260px;
+    height: 260px;
+    object-fit: contain;
+    border-radius: 5px;
 }
 
 .modal {
-    display: none;
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal-content {
-    background-color: white;
+    background-color: #222;
+    color: #e0e0e0;
     padding: 20px;
     border-radius: 8px;
-    max-width: 500px;
+    max-width: 450px;
+    max-height: 80vh; /* Limita la altura del modal */
+    overflow-y: auto; /* Agrega barra de desplazamiento si es necesario */
     text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+    border: 1px solid #444;
 }
 
-.details {
-    display: block;
+/* Estilos para la barra de desplazamiento */
+.modal-content::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #333; /* Color de fondo del track */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #555; /* Color del thumb (parte que se arrastra) */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #777; /* Color del thumb al pasar el mouse */
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
 }
 
 .button-container {
@@ -72,8 +124,21 @@ body {
     margin-top: 20px;
 }
 
+.close-button {
+    position: absolute; /* Posiciona el botón en relación al contenedor del modal */
+    top: 10px; /* Espacio desde la parte superior */
+    right: 10px; /* Espacio desde la derecha */
+    font-size: 24px; /* Tamaño del botón */
+    color: #e0e0e0; /* Color del texto */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.close-button:hover {
+    color: #ff4444; /* Color al pasar el mouse */
+}
+
 button {
-    padding: 10px 20px;
+    padding: 8px 16px;
     margin: 0 5px;
     cursor: pointer;
     border: none;
@@ -85,4 +150,10 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
