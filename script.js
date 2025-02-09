@@ -1,13 +1,15 @@
 let items = [];
 let currentPage = 0;
 let itemsPerPage = 0;
-let language = 'es-mx';
+let language = localStorage.getItem("selectedLanguage") || 'es-mx';
 
 function updateItemsPerPage() {
     if (window.innerWidth < 768) {
         itemsPerPage = 1; // 1 card si el ancho es menor a 768px
-    } else if (window.innerWidth < 1080) {
-        itemsPerPage = 6; // 6 cards si el ancho es menor a 1080px
+    } else if (window.innerWidth < 1080 && window.innerHeight >= 845) {
+        itemsPerPage = 4; // 4 cards si el ancho es menor a 1080px y la altura es mayor o igual a 500px
+    } else if (window.innerWidth < 1080 && window.innerHeight < 845) {
+        itemsPerPage = 2; // 2 cards si el ancho es menor a 1080px y la altura es menor a 500px
     } else {
         itemsPerPage = 8; // 8 cards por defecto
     }
@@ -17,6 +19,7 @@ window.addEventListener('resize', () => {
     updateItemsPerPage(); // Actualiza items por página
     displayItems(); // Muestra los items nuevamente
 });
+
 
 async function fetchManifestUrls(language) {
     try {
@@ -159,10 +162,14 @@ function openModal(itemIndex) {
     const modalContent = document.querySelector('.modal-content');
 
     modalContent.innerHTML = `
-        <span onclick="closeModal()" class="close-button">&times;</span>
-        <h2>${item.name}</h2>
-        <p>${item.description}</p>
-        <div class="button-container">
+        <div class="modal-header">
+            <h2>${item.name}</h2>
+            <span onclick="closeModal()" class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>${item.description}</p>
+        </div>
+        <div class="modal-footer">
             <button onclick="closeModal()">Cerrar</button>
         </div>
     `;
@@ -191,17 +198,19 @@ window.onclick = function(event) {
 };
 
 async function init() {
+    updateItemsPerPage(); // Actualiza itemsPerPage al iniciar
     const { recordUrl, loreUrl } = await fetchManifestUrls(language);
     await loadLore(recordUrl, loreUrl);
+    displayItems(); // Muestra las tarjetas después de cargar los datos
 }
 
-// Función para cambiar el idioma
 function changeLanguage() {
     language = language === 'es-mx' ? 'es' : 'es-mx'; // Alterna entre 'es-mx' y 'es'
-    document.getElementById("languageButton").innerText = `${language === 'es-mx' ? 'ES' : 'MX'}`; // Actualiza el texto del botón
-    init(); // Vuelve a cargar los datos con el nuevo idioma
+    localStorage.setItem("selectedLanguage", language); // Guardar en cache
+    document.getElementById("languageButton").innerText = language === 'es-mx' ? 'ES' : 'MX';
+    init(); // Recargar datos con el nuevo idioma
 }
 
+document.getElementById("languageButton").innerText = language === 'es-mx' ? 'ES' : 'MX';
 document.getElementById("languageButton").onclick = changeLanguage;
-
 init();

@@ -1,40 +1,57 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
     background-color: #121212;
     color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    justify-content: center;
+    margin: 0;
+    min-height: 100vh;
+    padding: 0;
+}
+
+button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 1vw;
+    margin: 0 5px;
+    padding: 8px 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    justify-content: center;
+    grid-template-rows: 1fr auto 1fr; /* 3 filas */
+    height: 100vh; /* Ocupar toda la altura de la pantalla */
+    gap: 10px; /* Espacio entre filas */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.content {
+    align-content: center;
     align-items: stretch;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-content: center;
     max-width: 1080px;
     padding: 20px;
-}
-
-@media (max-width: 1080px) {
-    .container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        grid-template-columns: repeat(1, 1fr);
-    }
-    .modal-content {
-        max-width: 90%; /* Establece un ancho máximo del 90% en pantallas pequeñas */
-        margin: 0 5%; /* Márgenes reducidos en pantallas pequeñas */
-    }
 }
 
 .card {
@@ -43,13 +60,15 @@ body {
     border-radius: 8px;
     cursor: pointer;
     display: flex;
+    flex: 0 0 calc(25% - 2vw);
     flex-direction: column;
+    margin: 1vw;
+    max-width: 250px;
     height: 320px;
     overflow: hidden;
     padding: 15px;
     text-align: center;
     transition: transform 0.2s;
-    max-width: 250px;
 }
 
 .card:hover {
@@ -58,7 +77,7 @@ body {
 }
 
 .card-content h2 {
-    font-size: 16px;
+    font-size: 1vw;
     margin-top: 10px;
 }
 
@@ -100,56 +119,79 @@ body {
 
 .modal-content {
     background-color: #222;
-    color: #e0e0e0;
-    padding: 20px;
+    border: 1px solid #444;
     border-radius: 8px;
-    max-width: 450px;
+    color: #e0e0e0;
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    gap: 10px;
     max-height: 80vh;
+    max-width: 450px; 
+    margin: 0 20px; /* Agregar márgenes a los lados */
     overflow-y: auto; /* Agrega barra de desplazamiento si es necesario */
+    padding: 20px;
+    position: relative; /* Para el posicionamiento del botón */
     text-align: center;
     transform: scale(0.8);
     transition: transform 0.3s ease;
-    border: 1px solid #444;
-    position: relative; /* Para el posicionamiento del botón */
-    margin: 0 20px; /* Agregar márgenes a los lados */
+    width: 90vw; /* Ancho del modal en relación al viewport */
 }
 
 .modal-content > * {
-    margin: 10px 0;
+    max-width: 90%; /* Establece un ancho máximo del 90% en pantallas pequeñas */
+    margin: 0 5%;
 }
 
-.modal-content::-webkit-scrollbar {
+.modal-body::-webkit-scrollbar {
     width: 8px;
 }
 
-.modal-content::-webkit-scrollbar-track {
+.modal-body::-webkit-scrollbar-track {
     background: #333;
     border-radius: 5px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+.modal-body::-webkit-scrollbar-thumb {
     background: #555;
     border-radius: 5px;
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
+.modal-body::-webkit-scrollbar-thumb:hover {
     background: #777;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.modal-footer {
+    text-align: center;
 }
 
 .modal.show .modal-content {
     transform: scale(1);
 }
 
-.button-container {
-    text-align: center;
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
     margin-top: 20px;
+    text-align: center;
 }
 
 .close-button {
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 24px;
+    font-size: 1vw;
     color: #e0e0e0;
     cursor: pointer;
     z-index: 1;
@@ -159,44 +201,31 @@ body {
     color: #ff4444;
 }
 
-button {
-    padding: 8px 16px;
-    margin: 0 5px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s;
+#content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas por defecto */
+    gap: 1vw; /* Espacio entre las tarjetas */
+    padding: 2vw;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
-
-button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-#languageContainer {
-    position: fixed; /* Fija el contenedor en la pantalla */
-    top: 10px; /* Espacio desde la parte superior */
-    right: 10px; /* Espacio desde la derecha */
-    display: flex; /* Usa flexbox para alinear elementos */
+.header {
     align-items: center; /* Centra verticalmente los elementos */
+    display: flex; /* Usa flexbox para alinear elementos */
     gap: 5px; /* Espacio entre el texto y el botón */
+    justify-content: center;
+    position: fixed; /* Fija el contenedor en la pantalla */
+    right: 10px; /* Espacio desde la derecha */
+    top: 10px; /* Espacio desde la parte superior */
 }
 
 #languageButton {
-    padding: 5px 10px;
+    background-color: #444; /* Fondo más suave */
     border: none;
     border-radius: 5px;
-    background-color: #444; /* Fondo más suave */
     color: #e0e0e0; /* Color del texto */
+    font-size: 0.8vw; /* Tamaño de fuente más pequeño */
+    padding: 5px 10px;
     transition: background-color 0.3s;
-    font-size: 14px; /* Tamaño de fuente más pequeño */
     z-index: 1000; /* Asegura que esté por encima de otros elementos */
 }
 
@@ -210,6 +239,127 @@ button:disabled {
 
 .slide-out {
     animation: slide-out 0.5s forwards;
+}
+
+@media (max-width: 1920px) {
+    button {
+        font-size: 1.5vw;
+    }
+    .card-content h2 {
+        font-size: 1.5vw;
+    }
+    #languageButton {
+        font-size: 1vw;
+    }
+}
+
+@media (max-width: 1080px) {
+    body {
+        font-size: 3vw;
+    }
+    button {
+        font-size: 3vw;
+    }
+    .card {
+        flex: 0 0 calc(33.33% - 2vw); /* 3 tarjetas por fila */
+    }
+    .card-content h2 {
+        font-size: 3vw;
+    }
+    .close-button {
+        font-size: 4vw;
+    }
+    .content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    #content {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas para pantallas más pequeñas */
+    }
+    h2 {
+        font-size: 4vw;
+    }
+    #languageButton {
+        font-size: 3vw;
+    }
+    p {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 950px) {
+    body {
+        font-size: 2vw;
+    }
+    button {
+        font-size: 2vw;
+    }
+    .card-content h2 {
+        font-size: 2vw;
+    }
+    .close-button {
+        font-size: 2vw;
+    }
+    h2 {
+        font-size: 2.5vw;
+    }
+    p {
+        font-size: 2vw;
+    }
+    #languageButton {
+        font-size: 1.5vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex: 0 0 calc(50% - 2vw); /* 2 tarjetas por fila */
+    }
+    .content {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    #content {
+        grid-template-columns: 1fr; /* 1 columna para pantallas aún más pequeñas */
+    }
+    h2 {
+        font-size: 1.25rem; /* Tamaño más pequeño para pantallas medianas */
+    }
+    .modal-content {
+        max-width: 90%; /* Establece un ancho máximo del 90% en pantallas pequeñas */
+        margin: 0 5%; /* Márgenes reducidos en pantallas pequeñas */
+    }
+    p {
+        font-size: 0.9rem; /* Ajustar texto en párrafos */
+    }
+}
+
+@media (max-width: 450px) {
+    body {
+        font-size: 3vw;
+    }
+    button {
+        font-size: 4vw;
+    }
+    .card {
+        flex: 0 0 100%; /* 1 tarjeta por fila */
+    }
+    .card-content h2 {
+        font-size: 5vw;
+    }
+    .close-button {
+        font-size: 4vw;
+    }
+    #content {
+        grid-template-columns: 1fr; /* 1 columna en pantallas muy pequeñas */
+    }
+    h2 {
+        font-size: 5vw; /* Ajustar aún más para pantallas muy pequeñas */
+    }
+    #languageButton {
+        font-size: 3vw;
+    }
+    p {
+        font-size: 4vw /* Ajustar texto en párrafos */
+    }
 }
 
 @keyframes slide-in {
