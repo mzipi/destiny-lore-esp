@@ -101,12 +101,20 @@ body {
     border-radius: 8px;
     max-width: 450px;
     max-height: 80vh;
-    overflow-y: auto;
+    overflow-y: auto; /* Agrega barra de desplazamiento si es necesario */
     text-align: center;
     transform: scale(0.8);
     transition: transform 0.3s ease;
     border: 1px solid #444;
-    position: relative;
+    position: relative; /* Para el posicionamiento del botón */
+    margin: 0 20px; /* Agregar márgenes a los lados */
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 90%; /* Establece un ancho máximo del 90% en pantallas pequeñas */
+        margin: 0 5%; /* Márgenes reducidos en pantallas pequeñas */
+    }
 }
 
 .modal-content > * {
