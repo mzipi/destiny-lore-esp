@@ -1,7 +1,20 @@
 let items = [];
 let currentPage = 0;
-const itemsPerPage = 8;
-let language = 'es-mx'; // Idioma por defecto
+let itemsPerPage = 8;
+let language = 'es-mx';
+
+function updateItemsPerPage() {
+    if (window.innerWidth < 768) {
+        itemsPerPage = 1; // 1 card si el ancho es menor a 768px
+    } else if (window.innerWidth < 1080) {
+        itemsPerPage = 6; // 6 cards si el ancho es menor a 1080px
+    } else {
+        itemsPerPage = 8; // 8 cards por defecto
+    }
+}
+
+window.addEventListener('resize', updateItemsPerPage); // Actualizar al cambiar el tamaño de la ventana
+updateItemsPerPage(); // Llamar a la función al cargar la página
 
 async function fetchManifestUrls(language) {
     try {
@@ -11,9 +24,6 @@ async function fetchManifestUrls(language) {
         // Construir las URLs correctamente
         const recordUrl = `https://www.bungie.net${manifestData.Response.jsonWorldComponentContentPaths[language].DestinyRecordDefinition}`;
         const loreUrl = `https://www.bungie.net${manifestData.Response.jsonWorldComponentContentPaths[language].DestinyLoreDefinition}`;
-
-        console.log("DestinyRecordDefinition URL:", recordUrl);
-        console.log("DestinyLoreDefinition URL:", loreUrl);
 
         return { recordUrl, loreUrl };
     } catch (error) {
@@ -127,8 +137,19 @@ function navigate(direction) {
     displayItems();
 }
 
-document.getElementById("prevButton").onclick = () => navigate('prev');
-document.getElementById("nextButton").onclick = () => navigate('next');
+document.getElementById("prevButton").onclick = () => {
+    if (currentPage > 0) {
+        currentPage--;
+        displayItems();
+    }
+};
+
+document.getElementById("nextButton").onclick = () => {
+    if ((currentPage + 1) * itemsPerPage < items.length) {
+        currentPage++;
+        displayItems();
+    }
+};
 
 function openModal(itemIndex) {
     const item = items[itemIndex];
