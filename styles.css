@@ -200,31 +200,31 @@ button:disabled {
 }
 
 .slide-in {
-    animation: slideIn 0.5s ease forwards;
+    animation: slide-in 0.5s forwards;
 }
 
 .slide-out {
-    animation: slideOut 0.5s ease forwards;
+    animation: slide-out 0.5s forwards;
 }
 
-@keyframes slideIn {
+@keyframes slide-in {
     from {
-        transform: translateX(100%);
         opacity: 0;
+        transform: translateY(20px);
     }
     to {
-        transform: translateX(0);
         opacity: 1;
+        transform: translateY(0);
     }
 }
 
-@keyframes slideOut {
+@keyframes slide-out {
     from {
-        transform: translateX(0);
         opacity: 1;
+        transform: translateY(0);
     }
     to {
-        transform: translateX(-100%);
         opacity: 0;
+        transform: translateY(-20px);
     }
 }

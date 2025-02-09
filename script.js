@@ -107,10 +107,13 @@ function displayItems() {
 
         contentDiv.appendChild(fragment);
 
-        // Añadir la clase slide-in
+        // Añadir la clase slide-in después de limpiar el contenido
         contentDiv.classList.remove("slide-out");
         contentDiv.classList.add("slide-in");
 
+        document.getElementById("prevButton").disabled = currentPage === 0;
+        document.getElementById("nextButton").disabled = endIndex >= items.length;
+        
     }, 500); // Tiempo de espera igual a la duración de la animación
 }
 
