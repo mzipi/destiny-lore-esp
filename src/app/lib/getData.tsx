@@ -11,7 +11,7 @@ export default async function getData() {
 		}
 	}
 
-	const response = await fetch("https://www.bungie.net/common/destiny2_content/json/es-mx/DestinyLoreDefinition-7881b91d-c6d2-4921-9fd0-c9bdfa4f38ca.json")
+	const response = await fetch("https://www.bungie.net/common/destiny2_content/json/es-mx/DestinyLoreDefinition-b236dc4b-cff6-4539-9e09-1525582fbe82.json")
 	const data: booksInterface = await response.json()
 	const books = Object.values(data)
 	return books.slice(0, 1)
