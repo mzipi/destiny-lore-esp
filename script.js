@@ -6,6 +6,7 @@ let filteredItems = [];
 const h2Elements = document.querySelectorAll('.card-content h2');
 
 async function init() {
+    toggleClearButton();
     updateItemsPerPage();
     const { recordUrl, loreUrl } = await fetchManifestUrls(language);
     await loadLore(recordUrl, loreUrl);
@@ -183,7 +184,6 @@ function closeModal() {
 function changeLanguage() {
     language = language === 'es-mx' ? 'es' : 'es-mx';
     localStorage.setItem("selectedLanguage", language);
-    document.getElementById("languageButton").innerText = language === 'es-mx' ? 'MX' : 'ES';
     init();
 }
 
@@ -196,6 +196,18 @@ function searchItems() {
 
     currentPage = 0; // Reinicia la paginación
     displayItems(filteredItems);
+}
+
+function clearSearch() {
+    document.getElementById("searchInput").value = ""; // Borrar texto
+    toggleClearButton(); // Ocultar botón
+    searchItems(); // Llamar a la función para resetear los resultados
+}
+
+function toggleClearButton() {
+    const input = document.getElementById("searchInput");
+    const clearButton = document.getElementById("clearButton");
+    clearButton.style.display = input.value ? "block" : "none";
 }
 
 window.addEventListener('resize', () => {
@@ -225,23 +237,20 @@ document.getElementById("nextButton").onclick = () => {
     }
 };
 
-function toggleClearButton() {
-    const input = document.getElementById("searchInput");
-    const clearButton = document.getElementById("clearButton");
-    clearButton.style.display = input.value ? "block" : "none";
-}
+document.getElementById("languageToggle").onclick = changeLanguage;
 
-function clearSearch() {
-    document.getElementById("searchInput").value = ""; // Borrar texto
-    toggleClearButton(); // Ocultar botón
-    searchItems(); // Llamar a la función para resetear los resultados
-}
+document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("languageToggle");
 
-document.getElementById("languageButton").innerText = language === 'es-mx' ? 'MX' : 'ES';
-document.getElementById("languageButton").onclick = changeLanguage;
+    // Cargar estado guardado en localStorage
+    if (localStorage.getItem("language") === "mx") {
+        toggle.checked = true;
+    }
 
-init();
-toggleClearButton();
+    toggle.addEventListener("change", function () {
+        localStorage.setItem("language", toggle.checked ? "mx" : "es");
+    });
+});
 
 h2Elements.forEach(h2 => {
     h2.addEventListener('mouseover', () => {
@@ -250,3 +259,5 @@ h2Elements.forEach(h2 => {
         tooltip.innerText = tooltipText; // Establece el texto del tooltip
     });
 });
+
+init();

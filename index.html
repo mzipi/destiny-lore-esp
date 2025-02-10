@@ -10,13 +10,18 @@
 <body>
     <div class="main">
         <div class="search-container">
-            <input type="text" id="searchInput" oninput="searchItems(); toggleClearButton();" placeholder="Buscar...">
+            <input type="text" id="searchInput" oninput="searchItems(); toggleClearButton();" placeholder="Buscar">
             <button id="clearButton" onclick="clearSearch()" style="display: none;">✖</button>
-        </div>        
-        <div class="language">
-            <span>Idioma:</span>
-            <button id="languageButton"></button>
         </div>
+        <div class="switch-container">
+            <label class="switch">
+              <input type="checkbox" id="languageToggle">
+              <span class="slider round">
+                <span class="label-es">Es</span>
+                <span class="label-mx">mx</span>
+              </span>
+            </label>
+          </div>
         <div class="content" id="content">Cargando...</div>
         <div class="buttons">
             <button id="prevButton" disabled>Anterior</button>
