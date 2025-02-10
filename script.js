@@ -1,25 +1,28 @@
 let items = [];
 let currentPage = 0;
-let itemsPerPage = 0;
+let itemsPerPage = 1;
 let language = localStorage.getItem("selectedLanguage") || 'es-mx';
+let filteredItems = [];
+const h2Elements = document.querySelectorAll('.card-content h2');
+
+async function init() {
+    updateItemsPerPage();
+    const { recordUrl, loreUrl } = await fetchManifestUrls(language);
+    await loadLore(recordUrl, loreUrl);
+    displayItems(items); // Asegurar que se pasan los ítems cargados
+}
 
 function updateItemsPerPage() {
     if (window.innerWidth < 768) {
-        itemsPerPage = 1; // 1 card si el ancho es menor a 768px
+        itemsPerPage = 1;
     } else if (window.innerWidth < 1080 && window.innerHeight >= 845) {
-        itemsPerPage = 4; // 4 cards si el ancho es menor a 1080px y la altura es mayor o igual a 500px
+        itemsPerPage = 4;
     } else if (window.innerWidth < 1080 && window.innerHeight < 845) {
-        itemsPerPage = 2; // 2 cards si el ancho es menor a 1080px y la altura es menor a 500px
+        itemsPerPage = 2;
     } else {
-        itemsPerPage = 8; // 8 cards por defecto
+        itemsPerPage = 8;
     }
 }
-
-window.addEventListener('resize', () => {
-    updateItemsPerPage(); // Actualiza items por página
-    displayItems(); // Muestra los items nuevamente
-});
-
 
 async function fetchManifestUrls(language) {
     try {
@@ -29,6 +32,9 @@ async function fetchManifestUrls(language) {
         // Construir las URLs correctamente
         const recordUrl = `https://www.bungie.net${manifestData.Response.jsonWorldComponentContentPaths[language].DestinyRecordDefinition}`;
         const loreUrl = `https://www.bungie.net${manifestData.Response.jsonWorldComponentContentPaths[language].DestinyLoreDefinition}`;
+
+        console.log("recordUrl:", recordUrl);
+        console.log("loreUrl:", loreUrl);
 
         return { recordUrl, loreUrl };
     } catch (error) {
@@ -76,85 +82,69 @@ async function loadLore(recordUrl, loreUrl) {
         console.error("Error:", error);
     }
 }
-
-function displayItems() {
+function displayItems(itemList = filteredItems.length > 0 ? filteredItems : items) {
     const contentDiv = document.getElementById("content");
-
-    // Añadir la clase slide-out
+    
     contentDiv.classList.add("slide-out");
 
-    // Esperar a que termine la animación de salida
     setTimeout(() => {
+        contentDiv.innerHTML = "";
+        const fragment = document.createDocumentFragment();
+
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        const currentItems = items.slice(startIndex, endIndex);
+        const currentItems = itemList.slice(startIndex, endIndex);
 
-        contentDiv.innerHTML = ""; // Limpiar el contenido
-
-        const fragment = document.createDocumentFragment();
         currentItems.forEach(item => {
             const card = document.createElement("div");
             card.className = "card";
             card.onclick = () => openModal(items.indexOf(item));
-
+        
             if (item.icon) {
                 const imgContainer = document.createElement("div");
                 imgContainer.className = "image-container";
-
+        
                 const img = document.createElement("img");
                 img.src = item.icon;
                 img.alt = item.name;
-
+        
                 imgContainer.appendChild(img);
                 card.appendChild(imgContainer);
             }
-
+        
             const cardContent = document.createElement("div");
             cardContent.className = "card-content";
-
+        
             const title = document.createElement("h2");
             title.textContent = item.name;
-
-            cardContent.appendChild(title);
+        
+            // Crear el contenedor del tooltip
+            const tooltip = document.createElement("span");
+            tooltip.className = "tooltip-text"; // Clase para el tooltip
+            tooltip.textContent = item.name; // Texto completo
+        
+            // Añadir el tooltip al h2
+            const tooltipContainer = document.createElement("div");
+            tooltipContainer.className = "tooltip";
+            tooltipContainer.appendChild(title);
+            tooltipContainer.appendChild(tooltip);
+            
+            cardContent.appendChild(tooltipContainer);
             card.appendChild(cardContent);
             fragment.appendChild(card);
         });
+        
 
         contentDiv.appendChild(fragment);
 
-        // Añadir la clase slide-in después de limpiar el contenido
         contentDiv.classList.remove("slide-out");
         contentDiv.classList.add("slide-in");
 
+        // Actualizar botones de paginación
         document.getElementById("prevButton").disabled = currentPage === 0;
-        document.getElementById("nextButton").disabled = endIndex >= items.length;
-        
-    }, 500); // Tiempo de espera igual a la duración de la animación
+        document.getElementById("nextButton").disabled = endIndex >= itemList.length;
+    }, 500);
 }
-
-
-function navigate(direction) {
-    if (direction === 'prev' && currentPage > 0) {
-        currentPage--;
-    } else if (direction === 'next' && (currentPage + 1) * itemsPerPage < items.length) {
-        currentPage++;
-    }
-    displayItems();
-}
-
-document.getElementById("prevButton").onclick = () => {
-    if (currentPage > 0) {
-        currentPage--;
-        displayItems();
-    }
-};
-
-document.getElementById("nextButton").onclick = () => {
-    if ((currentPage + 1) * itemsPerPage < items.length) {
-        currentPage++;
-        displayItems();
-    }
-};
 
 function openModal(itemIndex) {
     const item = items[itemIndex];
@@ -170,7 +160,7 @@ function openModal(itemIndex) {
             <p>${item.description}</p>
         </div>
         <div class="modal-footer">
-            <button onclick="closeModal()">Cerrar</button>
+            <!--button onclick="closeModal()">Cerrar</button-->
         </div>
     `;
 
@@ -190,6 +180,29 @@ function closeModal() {
     }, 300);
 }
 
+function changeLanguage() {
+    language = language === 'es-mx' ? 'es' : 'es-mx';
+    localStorage.setItem("selectedLanguage", language);
+    document.getElementById("languageButton").innerText = language === 'es-mx' ? 'MX' : 'ES';
+    init();
+}
+
+function searchItems() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    filteredItems = items.filter(item => 
+        item.name.toLowerCase().includes(query) || 
+        item.description.toLowerCase().includes(query)
+    );
+
+    currentPage = 0; // Reinicia la paginación
+    displayItems(filteredItems);
+}
+
+window.addEventListener('resize', () => {
+    updateItemsPerPage();
+    displayItems();
+});
+
 window.onclick = function(event) {
     const modal = document.getElementById('myModal');
     if (event.target === modal) {
@@ -197,20 +210,43 @@ window.onclick = function(event) {
     }
 };
 
-async function init() {
-    updateItemsPerPage(); // Actualiza itemsPerPage al iniciar
-    const { recordUrl, loreUrl } = await fetchManifestUrls(language);
-    await loadLore(recordUrl, loreUrl);
-    displayItems(); // Muestra las tarjetas después de cargar los datos
+document.getElementById("prevButton").onclick = () => {
+    if (currentPage > 0) {
+        currentPage--;
+        displayItems();
+    }
+};
+
+document.getElementById("nextButton").onclick = () => {
+    const itemList = filteredItems.length > 0 ? filteredItems : items;
+    if ((currentPage + 1) * itemsPerPage < itemList.length) {
+        currentPage++;
+        displayItems();
+    }
+};
+
+function toggleClearButton() {
+    const input = document.getElementById("searchInput");
+    const clearButton = document.getElementById("clearButton");
+    clearButton.style.display = input.value ? "block" : "none";
 }
 
-function changeLanguage() {
-    language = language === 'es-mx' ? 'es' : 'es-mx'; // Alterna entre 'es-mx' y 'es'
-    localStorage.setItem("selectedLanguage", language); // Guardar en cache
-    document.getElementById("languageButton").innerText = language === 'es-mx' ? 'ES' : 'MX';
-    init(); // Recargar datos con el nuevo idioma
+function clearSearch() {
+    document.getElementById("searchInput").value = ""; // Borrar texto
+    toggleClearButton(); // Ocultar botón
+    searchItems(); // Llamar a la función para resetear los resultados
 }
 
-document.getElementById("languageButton").innerText = language === 'es-mx' ? 'ES' : 'MX';
+document.getElementById("languageButton").innerText = language === 'es-mx' ? 'MX' : 'ES';
 document.getElementById("languageButton").onclick = changeLanguage;
+
 init();
+toggleClearButton();
+
+h2Elements.forEach(h2 => {
+    h2.addEventListener('mouseover', () => {
+        const tooltipText = h2.innerText; // Obtiene el texto completo
+        const tooltip = h2.querySelector('.tooltip-text');
+        tooltip.innerText = tooltipText; // Establece el texto del tooltip
+    });
+});

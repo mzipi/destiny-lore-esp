@@ -7,10 +7,15 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" href="./images/favicon.ico">
 </head>
-    <div class="container">
-        <div class="header">
-            <span>Cambiar idioma a:</span>
-            <button id="languageButton">ES</button>
+<body>
+    <div class="main">
+        <div class="search-container">
+            <input type="text" id="searchInput" oninput="searchItems(); toggleClearButton();" placeholder="Buscar...">
+            <button id="clearButton" onclick="clearSearch()" style="display: none;">✖</button>
+        </div>        
+        <div class="language">
+            <span>Idioma:</span>
+            <button id="languageButton"></button>
         </div>
         <div class="content" id="content">Cargando...</div>
         <div class="buttons">
@@ -18,17 +23,8 @@
             <button id="nextButton">Siguiente</button>
         </div>
     </div>
-
-    <!-- Modal -->
     <div class="modal" id="myModal">
-        <div class="modal-content">
-            <span onclick="closeModal()" style="cursor:pointer; float:right;">&times;</span>
-            <h2>Detalles</h2>
-            <p>Contenido del modal se llenará dinámicamente.</p>
-            <div class="button-container">
-                <button onclick="closeModal()">Cerrar</button>
-            </div>
-        </div>
+        <div class="modal-content"></div>
     </div>
     <script src="script.js"></script>
 </body>
