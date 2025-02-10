@@ -129,9 +129,9 @@ body {
 
 .tooltip {
     position: relative;
-  }
+}
   
-  .tooltip .tooltip-text {
+.tooltip .tooltip-text {
     visibility: hidden;
     background-color: black;
     color: #fff;
@@ -142,10 +142,10 @@ body {
     z-index: 1;
     bottom: 150%;
     left: 50%;
-    margin-left: -60px;
-  }
+    margin-left: -40px;
+}
   
-  .tooltip .tooltip-text::after {
+.tooltip .tooltip-text::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -154,11 +154,11 @@ body {
     border-width: 5px;
     border-style: solid;
     border-color: black transparent transparent transparent;
-  }
+}
   
-  .tooltip:hover .tooltip-text {
+.tooltip:hover .tooltip-text {
     visibility: visible;
-  }
+}
 
 .buttons {
     grid-column: 2;
