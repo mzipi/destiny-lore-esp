@@ -389,15 +389,12 @@ button:disabled {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
     .card {
         flex: 0 0 calc(50% - 2vw); /* 2 tarjetas por fila */
     }
     .content {
         grid-template-columns: repeat(1, 1fr);
-    }
-    #content {
-        grid-template-columns: 1fr; /* 1 columna para pantallas aún más pequeñas */
     }
     h2 {
         font-size: 1.25rem; /* Tamaño más pequeño para pantallas medianas */
