@@ -20,6 +20,8 @@ function updateItemsPerPage() {
         itemsPerPage = 4;
     } else if (window.innerWidth < 1080 && window.innerHeight < 845) {
         itemsPerPage = 2;
+    } else if (window.innerWidth < 1190 && window.innerHeight >= 820) {
+        itemsPerPage = 3;
     } else {
         itemsPerPage = 8;
     }

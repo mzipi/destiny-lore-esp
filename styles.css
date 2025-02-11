@@ -60,7 +60,6 @@ body {
     font-size: 14px; /* Tamaño más pequeño */
     color: #e0e0e0; /* Color del texto similar al resto de la página */
 }
-
 .switch-container {
     display: flex;
     justify-content: flex-end; /* Alinear a la derecha */
@@ -73,8 +72,8 @@ body {
 .switch {
     position: relative;
     display: inline-block;
-    width: 30px; /* Ancho reducido */
-    height: 16px; /* Alto reducido */
+    width: 40px; /* Ancho aumentado */
+    height: 20px; /* Alto aumentado */
 }
 
 .switch input {
@@ -92,14 +91,14 @@ body {
     bottom: 0;
     background-color: #2196F3;
     transition: 0.4s;
-    border-radius: 16px; /* Ajustado para el nuevo tamaño */
+    border-radius: 20px; /* Ajustado para el nuevo tamaño */
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 12px; /* Tamaño de la palanca reducido */
-    width: 12px; /* Tamaño de la palanca reducido */
+    height: 16px; /* Tamaño de la palanca aumentado */
+    width: 16px; /* Tamaño de la palanca aumentado */
     border-radius: 50%;
     left: 2px; /* Ajustado */
     bottom: 2px; /* Ajustado */
@@ -112,25 +111,18 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(14px); /* Ajustado para el nuevo tamaño */
+    transform: translateX(20px); /* Ajustado para el nuevo tamaño */
 }
 
 .slider .label-es, .slider .label-mx {
     position: absolute;
     top: 44%;
     transform: translateY(-50%);
-    font-size: 9px; /* Fuente reducida */
+    font-size: 11px; /* Fuente aumentada */
     font-weight: bold;
     color: white;
 }
 
-.label-es {
-    left: 4px; /* Ajustado */
-}
-
-.label-mx {
-    right: 4px; /* Ajustado */
-}
 
 .content {
     grid-column: 2;
@@ -338,21 +330,30 @@ button:disabled {
 
 
 
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
     body {
         font-size: 3vw;
+    }
+    .main {
+        grid-template-rows: 40px 400px 40px auto;
+    }
+    .switch-container {
+        font-size: 1vw;
+    }
+    .content {
+        grid-column: 2;
+        grid-row: 2;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
     }
     button {
         font-size: 3vw;
     }
     .card-content h2 {
-        font-size: 3vw;
+        font-size: 2vw;
     }
     .close-button {
         font-size: 4vw;
-    }
-    #content {
-        grid-template-columns: repeat(2, auto);
     }
     h2 {
         font-size: 4vw;
